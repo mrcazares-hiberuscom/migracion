@@ -1,0 +1,138 @@
+Descripción
+
+Como canal consumidor de servicios de seguros (Banca Web, Banca Móvil o sistemas internos),
+Quiero consumir la operación ConsultarDetalleSeguro01 del servicio WSProductos0156,
+Para obtener el detalle completo de un seguro específico, incluyendo información del préstamo asociado y el cronograma de registros/cuotas.
+
+Objetivo del entregable:
+Construir y validar el servicio WSProductos0156 garantizando que:
+
+Se valide la obligatoriedad del identificador del seguro (serguroId).
+
+Se realice la orquestación correcta hacia el backend UMPProductos0210.
+
+Se retornen los datos del seguro y la lista de registros conforme al contrato WSDL/XSD.
+
+Se propaguen correctamente los errores técnicos y de negocio.
+
+Criterios de Aceptación BP:
+
+
+Bloque 1 - Funcionalidad principal
+
+Criterio 1: Consulta exitosa de detalle de seguro
+Dado que el orquestador está desplegado en OCP4 y el backend UMPProductos0210 está disponible
+Cuando se realiza una solicitud con un serguroId válido (ej. 22831757) y headerIn completo
+Entonces el servicio debe:
+
+Retornar código de error 0 y mensaje OK.
+
+Devolver la estructura bodyOut con los campos: InsId, CIFNo, LoanAcc, LoanAmt, LoanTerm, TermBasis, CoverAmt, PageNo.
+
+Incluir la lista de registros con sus respectivos campos (SrNo, Date, Ins, CalcAmt).
+
+Criterio 2: Consistencia de datos en la respuesta
+Dado que se recibe una respuesta exitosa del backend
+Cuando se construye el mensaje de salida
+Entonces los valores de guid y unicidad del headerOut deben coincidir con los enviados en el headerIn.
+
+Bloque 2 - Reglas de negocio y validaciones
+
+Criterio 3: Validación de campo obligatorio serguroId
+Dado que se recibe una solicitud en el orquestador
+Cuando el campo serguroId llega vacío, nulo o con espacios en blanco
+Entonces el servicio debe detener el procesamiento y retornar código 1 con el mensaje "Valor del campo serguroId vacío o inválido".
+
+Criterio 4: Validación de estructura XSD (Schema Validation)
+Dado que el servicio tiene habilitada la validación de esquema
+Cuando se envía una solicitud sin el elemento headerIn, sin bodyIn o sin campos marcados como minOccurs="1" en el XSD
+Entonces el servicio debe retornar un error de validación técnica (Rechazo de Schema).
+
+Bloque 3 - Manejo de errores de negocio
+
+Criterio 5: Seguro no encontrado o sin datos
+Dado que el serguroId es enviado al backend
+Cuando el backend UMPProductos0210 retorna un código de error de negocio (ej. seguro inexistente)
+Entonces el orquestador debe propagar íntegramente el código y mensaje de error recibido del backend.
+
+Bloque 4 - Manejo de errores técnicos
+
+Criterio 6: Falla de comunicación con el backend
+Dado que se intenta invocar al subflujo UMPProductos0210
+Cuando ocurre un timeout, error de conexión o el backend retorna un error 5xx
+Entonces el servicio debe retornar un código de error técnico y el mensaje correspondiente al fallo de infraestructura.
+
+Bloque 5 - Criterios técnicos y observabilidad
+
+Criterio 7: Registro de logs en el pod
+Dado que el servicio procesa una transacción
+Cuando la solicitud entra, se procesa y se genera la respuesta
+Entonces se deben generar logs legibles en el pod de OCP4 que incluyan el guid para trazabilidad.
+
+Criterio 8: Monitoreo en Dynatrace
+Dado que el servicio está productivo en OCP4
+Cuando se ejecutan transacciones
+Entonces el servicio debe ser visible en Dynatrace para monitoreo de latencias y errores.
+
+Bloque 6 - Rendimiento
+
+Criterio 9: Cumplimiento de SLA de respuesta
+Dado que el servicio está sometido a una carga de 0.005 TPS en producción [Dato real según archivo de métricas]
+Cuando se ejecutan solicitudes concurrentes al endpoint ConsultarDetalleSeguro01
+Entonces el sistema debe garantizar:
+
+El 95% de las respuestas (p95) en menos de 800 ms [VALOR REFERENCIAL - PENDIENTE de confirmación con Arquitectura]
+
+Tasa de error HTTP (5xx) menor o igual al 3% [VALOR REFERENCIAL - PENDIENTE de confirmación con Arquitectura]
+
+Bloque 7 - Documentación
+
+Criterio 10: Entregables técnicos
+Dado que el desarrollo ha finalizado
+Cuando se proceda al paso a producción
+Entonces deben existir el diagrama arquitectónico en ICE Panel y el documento técnico actualizado.
+
+ESCENARIOS DE PRUEBA TEMPRANOS
+
+EP-001: Consulta exitosa de detalle de seguro (Nominal)
+CA vinculado: CA-01 | Tipo: Nominal
+Datos de prueba: serguroId: 22831757, canal: 02
+Dado que el orquestador está desplegado y el backend responde correctamente
+Cuando se envía una solicitud con serguroId 22831757
+Entonces el servicio retorna código 0, mensaje OK y el campo InsId en el bodyOut debe ser 22831757.
+
+EP-002: Validación de campo serguroId vacío (Negativo)
+CA vinculado: CA-03 | Tipo: Negativo
+Datos de prueba: serguroId: ""
+Dado que se recibe una solicitud en el orquestador
+Cuando el campo serguroId llega vacío
+Entonces el servicio retorna código 1 y mensaje "Valor del campo serguroId vacío o inválido".
+
+EP-003: Rechazo por estructura inválida - Falta serguroId (Negativo)
+CA vinculado: CA-04 | Tipo: Negativo
+Datos de prueba: bodyIn: (sin el tag serguroId)
+Dado que el XSD define serguroId como obligatorio
+Cuando se envía el bodyIn sin dicho campo
+Entonces el servicio retorna un error de validación de esquema.
+
+EP-004: Propagación de error desde el backend UMP (Error de negocio)
+CA vinculado: CA-05 | Tipo: Error de negocio
+Dados de prueba: serguroId: [DATO DE PRUEBA PENDIENTE: ID que no exista]
+Dado que el backend UMPProductos0210 retorna un error
+Cuando el orquestador recibe dicha respuesta
+Entonces el servicio retorna el código y mensaje original del backend.
+
+EP-005: Validación de longitud máxima de usuario (Límite)
+CA vinculado: CA-01 | Tipo: Nominal / Límite
+Datos de prueba: usuario: "USINTERT"
+Dado que el XSD permite hasta 8 caracteres para el usuario
+Cuando se envía una solicitud con usuario "USINTERT"
+Entonces el servicio procesa exitosamente y retorna código 0.
+
+Matriz de Decisión:
+| EP | serguroId | headerIn completo | Resultado esperado |
+| EP-001 | Válido | Sí | 0 / OK |
+| EP-002 | Vacío | Sí | 1 / Valor vacío o inválido |
+| EP-003 | Ausente | Sí | Error Schema (Fault) |
+| EP-004 | Inexistente | Sí | Código/Mensaje Backend |
+| EP-005 | Válido | Sí (Usuario 8ch) | 0 / OK |

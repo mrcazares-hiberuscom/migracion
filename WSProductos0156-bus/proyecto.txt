@@ -1,0 +1,38 @@
+Crea un proyecto Java con WSDL usando create_project_with_wsdl
+projectName: "tpr-msa-sp-wsproductos0156"
+projectPath: "/Users/Documents/micros"
+wsdlFilePath: "/Users/Documents/WSClientesxxxx.wsdl"
+groupId: "com.pichincha.sp"
+namespace: tpr
+tecnologia: bus
+framework: webflux
+invocaBancs: true
+deploymentType: microservicio
+
+Descripción: Consultar detalle de los seguros aplicados a un credito
+
+id de aplicación es: BP-MOVIL
+
+HU: https://pichincha.atlassian.net/browse/BTHCCC-9152
+
+url legado:
+http://10.60.128.85:6000/IntegrationBus/soap/WSProductos0156
+
+wsdl:
+https://dev.azure.com/BancoPichinchaEC/adi-especificaciones-tecnicas/_git/adi-doc-tecspec-tribu-integracion-apis?path=/sp%20-%20Soporte/tpr-msa-sp-wsproductos0156&version=GBmaster&_a=contents
+
+legado:
+https://dev.azure.com/BancoPichinchaEC/tpl-bus-omnicanal/_git/sqb-msa-wsproductos0156
+
+Dependencias:
+UMPProductos0210 -> ConsultarDetalleSeguro01 --> 061402 & 061401
+https://dev.azure.com/BancoPichinchaEC/tpl-bus-omnicanal/_git/sqb-msa-umpproductos0210
+
+
+curl -L 'https://tpr-msa-ad-bnc-products-insurances-enp.apps.ocptest.uiotest.bpichinchatest.test/bancs/trx/061401' -H 'Content-Type: application/json' -H 'x-guid: 868277447969706202601091314060461' -H 'x-channel: 01' -H 'x-medium: 010002' -H 'x-session: 904084630074040202601091314060461' -H 'x-agency: 0008' -H 'Cookie: 04b8e4ec460e4e574dde3bf200020c26=bcf5a2eb33b25fae11898a86879d36bf; 48b9b618eb5a88c1a356ea0d29c453bc=b904c8b00446780bdcff18e098b0c3ff; d48de08e022d1cc3b878ec7a60470dda=8de245c5b02431c7e763f12170101162' -d '{"transactionId":"061401","header":{"bancsUser":{"terminal":"1","institution":"003","branch":1,"workstation":1,"teller":"00070560","channel":"02","application":"02"}},"body":{"insId":4178361,"action":"E"}}'
+
+curl -L 'https://tpr-msa-ad-bnc-products-insurances-enp.apps.ocptest.uiotest.bpichinchatest.test/bancs/trx/061402' -H 'Content-Type: application/json' -H 'x-guid: 868277447969706202601091314060461' -H 'x-channel: 01' -H 'x-medium: 010002' -H 'x-session: 904084630074040202601091314060461' -H 'x-agency: 0008' -H 'Cookie: 04b8e4ec460e4e574dde3bf200020c26=bcf5a2eb33b25fae11898a86879d36bf; 48b9b618eb5a88c1a356ea0d29c453bc=b904c8b00446780bdcff18e098b0c3ff; d48de08e022d1cc3b878ec7a60470dda=8de245c5b02431c7e763f12170101162' -d '{"transactionId":"061402","header":{"bancsUser":{"terminal":"1","institution":"003","branch":1,"workstation":1,"teller":"00070560","channel":"02","application":"02"}},"body":{"insId":22831749,"tx061402DetailsRq":[]}}'
+
+
+
+
