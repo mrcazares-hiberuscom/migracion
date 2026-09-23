@@ -1,1 +1,5 @@
 https://myplatform.pichincha.com/create/tasks/2b1d7f5b-5101-45b2-96dd-85ae5bb42e56
+
+url: jdbc:oracle:thin:@omni-prp-scan:10521/TPOMN?oracle.jdbc.ReadTimeout=${DB_READ_TIMEOUT}
+username: "OPS$USRTADOM"
+password: "gH5*c8h/JM=3"
