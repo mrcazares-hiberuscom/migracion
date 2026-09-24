@@ -1,0 +1,14 @@
+Link IDENTIFICADOR_ENTREGABLE: https://pichincha.atlassian.net/browse/BTHCCC-9117
+Corresponde a: WSClientes0093
+DESCRICPCION: 
+Como canal consumidor de servicios de inversiones (Banca Web, Micrositio Inversiones u otros sistemas internos),
+Quiero consumir el servicio WSClientes0093 mediante sus operaciones de consulta de inversiones Auro,
+Para obtener información detallada sobre el portafolio de inversiones, renovaciones, pagos y detalles específicos de los clientes.
+
+Versionamiento: https://dev.azure.com/BancoPichinchaEC/tpl-middleware/_git/tpr-msa-sp-wsclientes0093
+Pruebas Unitarias:  https://dev.azure.com/BancoPichinchaEC/tpl-middleware/_git/tpr-msa-sp-wsclientes0093
+Análisis Estático: https://sonarcloud.io/summary/overall?id=f2f11c53-ba0c-414a-a3de-3f5137a96ae9&branch=develop
+Validación de estructura y tipos de datos en response: https://pichincha.atlassian.net/wiki/spaces/BPTPSRE/pages/6400508823/WSProductos0156+-+Documentaci+n+del+servicio sección sin alteración de contratos.
+Seguridad: https://app.snyk.io/org/tribu-integraciones-y-apis-tpl-middleware/project/ac71dc62-0880-4960-a14a-1ce152803bf3
+Documentación: https://pichincha.atlassian.net/wiki/spaces/BPTPSRE/pages/6400508823/WSProductos0156+-+Documentaci+n+del+servicio
+Pipeline CI/CD: https://dev.azure.com/BancoPichinchaEC/tpl-middleware/_build/results?buildId=1898383&view=results
